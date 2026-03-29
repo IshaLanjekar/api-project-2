@@ -1,0 +1,15 @@
+# Email Spam Filter Requirements
+
+# Core ML & NLP
+pandas>=2.0.0
+scikit-learn>=1.3.0
+nltk>=3.8.0
+
+# Web UI
+streamlit>=1.30.0
+
+# Gmail Integration
+google-api-python-client>=2.100.0
+google-auth-oauthlib>=1.1.0
+google-auth-httplib2>=0.1.1
+google-auth>=2.23.0
