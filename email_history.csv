@@ -1,0 +1,10 @@
+timestamp,email_text,is_spam,importance,category,keywords_used,user_feedback
+2026-03-04 01:42:16,Win a free iPhone now!,True,,,urgent,
+2026-03-04 01:42:16,Meeting tomorrow at 3 PM,False,Important,Work,"meeting,deadline",
+2026-03-04 01:42:16,Check out our 50% sale!,False,Not Important,Work,,
+2026-03-29 19:24:21,Win a free iPhone now!,True,,,urgent,
+2026-03-29 19:24:21,Meeting tomorrow at 3 PM,False,Important,Work,"meeting,deadline",
+2026-03-29 19:24:21,Check out our 50% sale!,False,Not Important,Work,,
+2026-03-29 19:24:45,Win a free iPhone now!,True,,,urgent,
+2026-03-29 19:24:45,Meeting tomorrow at 3 PM,False,Important,Work,"meeting,deadline",
+2026-03-29 19:24:45,Check out our 50% sale!,False,Not Important,Work,,
