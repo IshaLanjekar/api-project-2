@@ -1,0 +1,7 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local OAuth secrets/tokens
+credentials.json
+token.pickle
