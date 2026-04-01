@@ -1,5 +1,6 @@
 const API_BASE_URL_PROPERTY = 'SPAM_API_BASE_URL';
 const USER_KEYWORDS_PROPERTY = 'SPAM_USER_KEYWORDS';
+const MAIN_WEBSITE_URL_PROPERTY = 'SPAM_MAIN_WEBSITE_URL';
 const MAX_TEXT_LENGTH = 4000;
 
 function setApiBaseUrl() {
@@ -9,30 +10,35 @@ function setApiBaseUrl() {
   );
 }
 
+function setMainWebsiteUrl() {
+  PropertiesService.getScriptProperties().setProperty(
+    MAIN_WEBSITE_URL_PROPERTY,
+    'https://ishalanjekar.github.io/api-project-2/'
+  );
+}
+
 function buildHomeCard() {
   const currentKeywords = _getUserKeywords();
   const section = CardService.newCardSection()
     .addWidget(
-      CardService.newTextParagraph().setText(
-        'Spam Filter Assistant is ready. Open an email and click Analyze Current Email.'
-      )
-    )
-    .addWidget(
-      CardService.newTextButton()
-        .setText('Analyze Current Email')
-        .setOnClickAction(CardService.newAction().setFunctionName('analyzeCurrentEmail'))
+      CardService.newTextParagraph().setText('Set your keywords')
     )
     .addWidget(
       CardService.newTextInput()
         .setFieldName('keywordsInput')
-        .setTitle('Trusted Keywords (comma-separated)')
+        .setTitle('Keywords (comma-separated)')
         .setHint('Example: meeting, college, project')
         .setValue(currentKeywords.join(', '))
     )
     .addWidget(
       CardService.newTextButton()
-        .setText('Save Keywords')
+        .setText('+ Add')
         .setOnClickAction(CardService.newAction().setFunctionName('saveKeywords'))
+    )
+    .addWidget(
+      CardService.newTextButton()
+        .setText('Analyze Current Email')
+        .setOnClickAction(CardService.newAction().setFunctionName('analyzeCurrentEmail'))
     );
 
   return [
@@ -90,6 +96,11 @@ function analyzeCurrentEmail(e) {
             ? 'Recommendation: Move this email to Spam and avoid clicking links.'
             : 'Recommendation: This email looks safe based on the model output.'
         )
+      )
+      .addWidget(
+        CardService.newTextButton()
+          .setText('Go for Detailed Analysis')
+          .setOpenLink(CardService.newOpenLink().setUrl(_buildDetailedAnalysisUrl(result)))
       );
 
     if (plainBody.length > MAX_TEXT_LENGTH) {
@@ -202,6 +213,31 @@ function _getFormInputValue(e, fieldName) {
   const input = fields[fieldName];
   const values = input.stringInputs && input.stringInputs.value;
   return values && values.length ? values[0] : '';
+}
+
+function _buildDetailedAnalysisUrl(result) {
+  const baseUrl =
+    PropertiesService.getScriptProperties().getProperty(MAIN_WEBSITE_URL_PROPERTY) ||
+    'https://ishalanjekar.github.io/api-project-2/';
+
+  const normalizedBase = baseUrl.replace(/\/$/, '');
+  const params = [];
+
+  if (result && result.label) {
+    params.push('label=' + encodeURIComponent(result.label));
+  }
+  if (result && typeof result.confidence === 'number') {
+    params.push('confidence=' + encodeURIComponent(Math.round(result.confidence * 100)));
+  }
+  if (result && result.keyword_matches && result.keyword_matches.length) {
+    params.push('keywords=' + encodeURIComponent(result.keyword_matches.join(',')));
+  }
+
+  if (!params.length) {
+    return normalizedBase + '/';
+  }
+
+  return normalizedBase + '/?' + params.join('&');
 }
 
 function _notify(text) {
