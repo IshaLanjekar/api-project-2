@@ -5,44 +5,503 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Spam Filter Assistant</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px auto; max-width: 860px; line-height: 1.6; color: #1f2937; padding: 0 16px; }
-    h1, h2 { color: #111827; }
-    a { color: #1a73e8; }
-    .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 16px 0; }
-    .pill { display: inline-block; margin-right: 8px; margin-bottom: 8px; padding: 4px 10px; border-radius: 999px; background: #eef2ff; color: #1f3a8a; font-size: 13px; }
-    .ok { color: #166534; font-weight: 700; }
-    .warn { color: #991b1b; font-weight: 700; }
+    :root {
+      --ink: #10233f;
+      --muted: #4b5f7a;
+      --line: #d7deea;
+      --bg: #f4f8ff;
+      --panel: #ffffff;
+      --brand: #0f6fff;
+      --brand-dark: #0d56c6;
+      --safe: #0f7a4e;
+      --risk: #b42318;
+      --safe-soft: #d9f7ea;
+      --risk-soft: #ffe5e5;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 10%, #dbeafe 0%, rgba(219, 234, 254, 0) 40%),
+        radial-gradient(circle at 90% 85%, #e0f2fe 0%, rgba(224, 242, 254, 0) 35%),
+        var(--bg);
+      padding: 36px 18px;
+    }
+
+    .wrap {
+          <title>Gmail Spam Detector</title>
+      margin: 0 auto;
+            :root {
+              --ink: #1f2937;
+              --ink-muted: #4b5563;
+              --line: #e5e7eb;
+              --surface: #ffffff;
+              --soft: #f8fafc;
+              --accent: #f15b7a;
+              --accent-hover: #e7486c;
+              --info: #e8f3ff;
+              --good: #14532d;
+              --bad: #991b1b;
+            }
+
+            * { box-sizing: border-box; }
+
+            body {
+              margin: 0;
+              font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+              color: var(--ink);
+              background: linear-gradient(180deg, #fafcff 0%, #f7f9fc 100%);
+            }
+
+            .container {
+              max-width: 980px;
+              margin: 40px auto;
+              padding: 0 18px;
+            }
+
+            h1, h2, h3 { margin: 0 0 10px; }
+            p { margin: 0 0 12px; line-height: 1.6; }
+            a { color: #1d4ed8; }
+
+            .topbar {
+              margin-bottom: 26px;
+            }
+
+            .title-row {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              margin-bottom: 6px;
+            }
+
+            .title-icon {
+              width: 28px;
+              height: 28px;
+              border-radius: 8px;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              background: #eef2ff;
+              font-size: 16px;
+            }
+
+            .title-main {
+              font-size: clamp(28px, 3vw, 44px);
+              letter-spacing: -0.02em;
+            }
+
+            .connected {
+              color: var(--ink-muted);
+              font-size: 14px;
+            }
+
+            .card {
+              background: var(--surface);
+              border: 1px solid var(--line);
+              border-radius: 14px;
+              padding: 22px;
+              margin-bottom: 16px;
+              box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+            }
+
+            .section-title {
+              font-size: 32px;
+              margin-bottom: 8px;
+            }
+
+            .info-box {
+              border-radius: 10px;
+              background: var(--info);
+              padding: 12px 14px;
+              color: #1e3a8a;
+              margin: 16px 0;
+              font-size: 14px;
+            }
+
+            .keywords-wrap {
+              margin: 18px 0 10px;
+            }
+
+            .keywords-title {
+              font-weight: 600;
+              margin-bottom: 10px;
+            }
+
+            .chips {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 8px;
+              min-height: 36px;
+              margin-bottom: 14px;
+            }
+
+            .chip {
+              border: 1px solid #c7ead8;
+              background: #ecfdf3;
+              color: #065f46;
+              border-radius: 999px;
+              padding: 6px 10px;
+              font-size: 13px;
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+            }
+
+            .chip button {
+              border: 0;
+              background: transparent;
+              cursor: pointer;
+              color: #065f46;
+              font-size: 12px;
+              padding: 0;
+              line-height: 1;
+            }
+
+            .keyword-row {
+              display: grid;
+              grid-template-columns: 1fr auto;
+              gap: 12px;
+              margin: 10px 0;
+            }
+
+            .input {
+              width: 100%;
+              height: 44px;
+              border: 1px solid var(--line);
+              border-radius: 10px;
+              padding: 0 12px;
+              font-size: 15px;
+              background: #fbfdff;
+            }
+
+            .btn {
+              height: 44px;
+              border: 0;
+              border-radius: 10px;
+              padding: 0 20px;
+              background: var(--accent);
+              color: #fff;
+              font-weight: 600;
+              cursor: pointer;
+            }
+
+            .btn:hover { background: var(--accent-hover); }
+
+            .btn-wide {
+              width: 100%;
+              margin-top: 14px;
+            }
+
+            .status-line {
+              margin-top: 16px;
+              color: #14532d;
+              font-size: 14px;
+            }
+
+            .analysis-label.ok { color: var(--good); font-weight: 700; }
+            .analysis-label.warn { color: var(--bad); font-weight: 700; }
+
+            .pill {
+              display: inline-block;
+              margin-right: 8px;
+              margin-bottom: 8px;
+              padding: 4px 10px;
+              border-radius: 999px;
+              background: #eef2ff;
+              color: #1f3a8a;
+              font-size: 13px;
+            }
+
+            @media (max-width: 640px) {
+              .keyword-row { grid-template-columns: 1fr; }
+              .section-title { font-size: 26px; }
+              .card { padding: 18px; }
+            }
+      box-shadow: 0 20px 45px rgba(15, 111, 255, 0.25);
+      margin-bottom: 18px;
+    }
+          <div class="container">
+            <header class="topbar">
+              <div class="title-row">
+                <span class="title-icon">🧭</span>
+                <h1 class="title-main">Gmail Spam Detector</h1>
+              </div>
+              <p class="connected">Connected to <a href="mailto:ishalanjekar@gmail.com">ishalanjekar@gmail.com</a></p>
+            </header>
+
+            <section class="card" id="setup-card">
+              <h2 class="section-title">Set Your Keywords First</h2>
+              <p>
+                Before fetching emails, set keywords that are important to you.
+                Emails matching these keywords will get extra trust priority in analysis.
+              </p>
+              <div class="info-box">💡 Examples: your name, project names, company name, meeting, invoice, internship.</div>
+
+              <div class="keywords-wrap">
+                <p class="keywords-title">Your current keywords:</p>
+                <div class="chips" id="keyword-chips"></div>
+              </div>
+
+              <label for="keyword-input"><strong>Add a keyword:</strong></label>
+              <div class="keyword-row">
+                <input id="keyword-input" class="input" type="text" placeholder="e.g. meeting, invoice, project-name">
+                <button id="add-keyword-btn" class="btn" type="button">+ Add Keyword</button>
+              </div>
+
+              <p class="status-line" id="keyword-status">No keywords set yet.</p>
+              <button id="continue-btn" class="btn btn-wide" type="button">Continue — Fetch & Analyze Emails</button>
+            </section>
+
+            <section class="card" id="analysis-card" style="display: none;">
+              <h2>Detailed Analysis</h2>
+              <p><strong>Classification:</strong> <span id="result-label" class="analysis-label"></span></p>
+              <p><strong>Confidence:</strong> <span id="result-confidence"></span></p>
+              <p><strong>Recommendation:</strong> <span id="result-recommendation"></span></p>
+              <div id="analysis-keywords-wrap" style="display: none;">
+                <p><strong>Matched Keywords:</strong></p>
+                <div id="analysis-keyword-pills"></div>
+              </div>
+            </section>
+
+            <section class="card">
+              <h3>Legal</h3>
+              <p><a href="./privacy-policy.html">Privacy Policy</a></p>
+              <p><a href="./terms-of-service.html">Terms of Service</a></p>
+            </section>
+
+            <section class="card">
+              <h3>Support</h3>
+              <p>Email: ishalanjekar@gmail.com</p>
+            </section>
+          </div>
+
+          <script>
+            (function () {
+              const STORAGE_KEY = 'spam_detector_keywords';
+              const params = new URLSearchParams(window.location.search);
+
+              const keywordChips = document.getElementById('keyword-chips');
+              const keywordInput = document.getElementById('keyword-input');
+              const addKeywordBtn = document.getElementById('add-keyword-btn');
+              const continueBtn = document.getElementById('continue-btn');
+              const keywordStatus = document.getElementById('keyword-status');
+
+              const analysisCard = document.getElementById('analysis-card');
+              const resultLabel = document.getElementById('result-label');
+              const resultConfidence = document.getElementById('result-confidence');
+              const resultRecommendation = document.getElementById('result-recommendation');
+              const analysisKeywordsWrap = document.getElementById('analysis-keywords-wrap');
+              const analysisKeywordPills = document.getElementById('analysis-keyword-pills');
+
+              function sanitizeKeyword(word) {
+                return (word || '').toLowerCase().trim();
+              }
+
+              function readKeywordsFromStorage() {
+                try {
+                  const raw = localStorage.getItem(STORAGE_KEY);
+                  if (!raw) return [];
+                  const parsed = JSON.parse(raw);
+                  return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+                } catch (err) {
+                  return [];
+                }
+              }
+
+              function readKeywordsFromQuery() {
+                const queryKeywords = params.get('keywords');
+                if (!queryKeywords) return [];
+                return queryKeywords.split(',').map(sanitizeKeyword).filter(Boolean);
+              }
+
+              function writeKeywordsToStorage(keywords) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(keywords));
+              }
+
+              function uniqueKeywords(words) {
+                const set = new Set();
+                words.forEach((word) => {
+                  const clean = sanitizeKeyword(word);
+                  if (clean) set.add(clean);
+                });
+                return Array.from(set).slice(0, 40);
+              }
+
+              let keywords = uniqueKeywords([...readKeywordsFromStorage(), ...readKeywordsFromQuery()]);
+              writeKeywordsToStorage(keywords);
+
+              function renderKeywordChips() {
+                keywordChips.innerHTML = '';
+                if (!keywords.length) {
+                  keywordChips.innerHTML = '<span style="color:#6b7280;font-size:14px;">No keywords yet</span>';
+                  keywordStatus.textContent = 'No keywords set yet.';
+                  return;
+                }
+
+                keywords.forEach((word) => {
+                  const chip = document.createElement('span');
+                  chip.className = 'chip';
+                  chip.innerHTML = '✅ ' + word + ' <button type="button" aria-label="remove">✕</button>';
+                  chip.querySelector('button').addEventListener('click', function () {
+                    keywords = keywords.filter((k) => k !== word);
+                    writeKeywordsToStorage(keywords);
+                    renderKeywordChips();
+                  });
+                  keywordChips.appendChild(chip);
+                });
+
+                keywordStatus.textContent = '✅ You have ' + keywords.length + ' keyword(s) set. Ready to fetch emails!';
+              }
+
+              addKeywordBtn.addEventListener('click', function () {
+                const pending = keywordInput.value
+                  .split(',')
+                  .map(sanitizeKeyword)
+                  .filter(Boolean);
+
+                if (!pending.length) {
+                  keywordStatus.textContent = 'Enter at least one keyword to add.';
+                  return;
+                }
+
+                keywords = uniqueKeywords([...keywords, ...pending]);
+                writeKeywordsToStorage(keywords);
+                keywordInput.value = '';
+                renderKeywordChips();
+              });
+
+              continueBtn.addEventListener('click', function () {
+                const next = new URL(window.location.href);
+                if (keywords.length) {
+                  next.searchParams.set('keywords', keywords.join(','));
+                }
+                window.location.href = next.toString();
+              });
+
+              function renderAnalysisFromQuery() {
+                const label = (params.get('label') || '').trim();
+                const confidence = (params.get('confidence') || '').trim();
+                const matched = (params.get('keywords') || '').split(',').map(sanitizeKeyword).filter(Boolean);
+
+                if (!label && !confidence) {
+                  return;
+                }
+
+                analysisCard.style.display = 'block';
+                resultLabel.textContent = label || 'Unknown';
+                resultLabel.className = 'analysis-label ' + ((label || '').toLowerCase() === 'spam' ? 'warn' : 'ok');
+                resultConfidence.textContent = confidence ? confidence + '%' : 'N/A';
+                resultRecommendation.textContent =
+                  (label || '').toLowerCase() === 'spam'
+                    ? 'Treat this email with caution. Avoid unknown links or attachments.'
+                    : 'This email appears safe based on model output.';
+
+                analysisKeywordPills.innerHTML = '';
+                if (matched.length) {
+                  analysisKeywordsWrap.style.display = 'block';
+                  matched.forEach((word) => {
+                    const pill = document.createElement('span');
+                    pill.className = 'pill';
+                    pill.textContent = word;
+                    analysisKeywordPills.appendChild(pill);
+                  });
+                }
+              }
+
+              renderKeywordChips();
+              renderAnalysisFromQuery();
+            })();
+          </script>
+
+    .pill {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #e9f0ff;
+      color: #1d3f80;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    h2 { margin: 0 0 12px; font-size: 25px; }
+    h3 { margin: 0 0 8px; font-size: 18px; }
+    p { margin: 0 0 12px; }
+    a { color: var(--brand-dark); }
+
+    .muted { color: var(--muted); }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      background: var(--brand);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .cta:hover { background: var(--brand-dark); }
+
+    .full { grid-column: span 12; }
+
+    @media (max-width: 920px) {
+      .analysis, .stats { grid-column: span 12; }
+      .hero h1 { font-size: 31px; }
+      body { padding: 18px 12px; }
+    }
   </style>
 </head>
 <body>
-  <h1>Spam Filter Assistant</h1>
-  <p>A Gmail add-on that helps classify currently opened emails as Spam or Not Spam.</p>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Spam Filter Assistant</h1>
+      <p>Detailed analysis view for your Gmail add-on. Each time you click from Gmail, this page highlights confidence, recommendation, and matched trusted keywords.</p>
+    </section>
 
-  <div class="card" id="analysis-card" style="display: none;">
-    <h2>Detailed Analysis</h2>
-    <p><strong>Classification:</strong> <span id="result-label"></span></p>
-    <p><strong>Confidence:</strong> <span id="result-confidence"></span></p>
-    <p><strong>Recommendation:</strong> <span id="result-recommendation"></span></p>
-    <div id="keywords-wrap" style="display: none;">
-      <p><strong>Matched Keywords:</strong></p>
-      <div id="keyword-pills"></div>
-    </div>
-  </div>
+    <main class="grid">
+      <section class="panel analysis" id="analysis-card" style="display: none;">
+        <div id="result-badge" class="label-badge"></div>
+        <h2>Detailed Analysis</h2>
+        <p id="result-recommendation" class="muted"></p>
+        <div id="keywords-wrap" style="display: none;">
+          <h3>Matched Keywords</h3>
+          <div class="pills" id="keyword-pills"></div>
+        </div>
+      </section>
 
-  <div class="card">
-    <h2>About</h2>
-    <p>This add-on reads the subject and plain text body of the email you open in Gmail and sends it securely to a prediction API for classification.</p>
-  </div>
+      <aside class="panel stats" id="stats-card" style="display: none;">
+        <h3>Result Metrics</h3>
+        <div class="metric">
+          <strong>Classification</strong>
+          <span id="result-label"></span>
+        </div>
+        <div class="metric">
+          <strong>Confidence</strong>
+          <span id="result-confidence"></span>
+        </div>
+      </aside>
 
-  <div class="card">
-    <h2>Legal</h2>
-    <p><a href="./privacy-policy.html">Privacy Policy</a></p>
-    <p><a href="./terms-of-service.html">Terms of Service</a></p>
-  </div>
+      <section class="panel full">
+        <h3>About</h3>
+        <p class="muted">This add-on reads the subject and plain text body of the opened email in Gmail and sends it securely to a prediction API for classification.</p>
+      </section>
 
-  <div class="card">
-    <h2>Support</h2>
-    <p>Email: ishalanjekar@gmail.com</p>
+      <section class="panel full">
+        <h3>Legal</h3>
+        <p><a href="./privacy-policy.html">Privacy Policy</a></p>
+        <p><a href="./terms-of-service.html">Terms of Service</a></p>
+      </section>
+
+      <section class="panel full">
+        <h3>Support</h3>
+        <p class="muted">Email: ishalanjekar@gmail.com</p>
+        <a class="cta" href="https://mail.google.com/" target="_blank" rel="noopener noreferrer">Back to Gmail</a>
+      </section>
+    </main>
   </div>
 
   <script>
@@ -57,6 +516,8 @@
       }
 
       const analysisCard = document.getElementById('analysis-card');
+      const statsCard = document.getElementById('stats-card');
+      const badge = document.getElementById('result-badge');
       const labelNode = document.getElementById('result-label');
       const confidenceNode = document.getElementById('result-confidence');
       const recommendationNode = document.getElementById('result-recommendation');
@@ -64,15 +525,18 @@
       const keywordPills = document.getElementById('keyword-pills');
 
       const cleanLabel = (label || 'Unknown').trim();
-      const cleanConfidence = confidence ? confidence.trim() + '%' : 'N/A';
-      labelNode.textContent = cleanLabel;
-      labelNode.className = cleanLabel.toLowerCase() === 'spam' ? 'warn' : 'ok';
-      confidenceNode.textContent = cleanConfidence;
+      const lowerLabel = cleanLabel.toLowerCase();
+      const isSpam = lowerLabel === 'spam';
 
-      recommendationNode.textContent =
-        cleanLabel.toLowerCase() === 'spam'
-          ? 'Treat this email with caution. Avoid unknown links or attachments.'
-          : 'This email appears safe based on current model output.';
+      labelNode.textContent = cleanLabel;
+      confidenceNode.textContent = confidence ? confidence.trim() + '%' : 'N/A';
+
+      badge.textContent = isSpam ? 'Risk: Spam Detected' : 'Safe: Not Spam';
+      badge.className = 'label-badge ' + (isSpam ? 'label-risk' : 'label-safe');
+
+      recommendationNode.textContent = isSpam
+        ? 'Treat this email with caution. Avoid unknown links, attachments, and payment requests.'
+        : 'This email appears safe based on current model output and trusted keyword checks.';
 
       if (keywords) {
         const parsed = keywords
@@ -92,6 +556,7 @@
       }
 
       analysisCard.style.display = 'block';
+      statsCard.style.display = 'block';
     })();
   </script>
 </body>
