@@ -1,30 +1,30 @@
 from flask import Flask, request, jsonify
 import pickle
 
-# ✅ FIRST create app
 app = Flask(__name__)
 
-# ✅ THEN load model
-model = pickle.load(open("spam_model.pkl", "rb"))
-vectorizer = pickle.load(open("vectorizer_spam.pkl", "rb"))
+# load model and vectorizer
+model = pickle.load(open("model.pkl", "rb"))
+vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
-# ✅ THEN routes
+@app.route("/")
+def home():
+    return "API is running"
+
 @app.route("/predict", methods=["POST"])
 def predict():
-    data = request.json
-    email_text = data.get("text")
-    keywords = data.get("keywords", [])
+    data = request.get_json()
+    text = data.get("text")
 
-    transformed = vectorizer.transform([email_text])
+    # transform input
+    transformed = vectorizer.transform([text])
+
+    # predict
     prediction = model.predict(transformed)[0]
 
-    keyword_match = any(word.lower() in email_text.lower() for word in keywords)
-
     return jsonify({
-        "spam": int(prediction),
-        "keyword_match": keyword_match
+        "spam": int(prediction)
     })
 
-# ✅ LAST run app
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
