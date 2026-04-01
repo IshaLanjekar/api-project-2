@@ -13,7 +13,7 @@ function setApiBaseUrl() {
 function setMainWebsiteUrl() {
   PropertiesService.getScriptProperties().setProperty(
     MAIN_WEBSITE_URL_PROPERTY,
-    'https://www.relume.io/app/project/P3198235_N9ubQWEUeJYt3MCAocflvWoO1S7G4A174fzr922cte0#mode=design'
+    'https://ishalanjekar.github.io/api-project-2/'
   );
 }
 
@@ -39,6 +39,11 @@ function buildHomeCard() {
       CardService.newTextButton()
         .setText('Analyze Current Email')
         .setOnClickAction(CardService.newAction().setFunctionName('analyzeCurrentEmail'))
+    )
+    .addWidget(
+      CardService.newTextButton()
+        .setText('Fetch 30 Inbox Emails')
+        .setOnClickAction(CardService.newAction().setFunctionName('fetchInboxEmails'))
     );
 
   return [
@@ -123,6 +128,47 @@ function analyzeCurrentEmail(e) {
     return _notify(
       'API call timed out or failed. Retry in 10-20 seconds (Render cold start) or open a shorter email.'
     );
+  }
+}
+
+function fetchInboxEmails(e) {
+  try {
+    const threads = GmailApp.search('in:inbox', 0, 30);
+    if (!threads.length) {
+      return _notify('No inbox emails found.');
+    }
+
+    const section = CardService.newCardSection()
+      .addWidget(
+        CardService.newTextParagraph().setText(
+          '<b>Latest 30 Inbox Emails</b><br/>Showing the newest inbox threads from your own Gmail box.'
+        )
+      );
+
+    threads.forEach(function (thread, index) {
+      const messages = thread.getMessages();
+      const message = messages[messages.length - 1];
+      const subject = (message.getSubject() || '(No subject)').substring(0, 120);
+      const from = (message.getFrom() || '').substring(0, 80);
+      const snippet = (message.getPlainBody() || '').replace(/\s+/g, ' ').substring(0, 140);
+
+      section.addWidget(
+        CardService.newTextParagraph().setText(
+          '<b>' + (index + 1) + '.</b> ' + subject + '<br/>' + from + '<br/>' + snippet
+        )
+      );
+    });
+
+    const card = CardService.newCardBuilder()
+      .setHeader(CardService.newCardHeader().setTitle('Inbox Snapshot'))
+      .addSection(section)
+      .build();
+
+    return CardService.newActionResponseBuilder()
+      .setNavigation(CardService.newNavigation().pushCard(card))
+      .build();
+  } catch (err) {
+    return _notify('Could not fetch inbox emails: ' + err.message);
   }
 }
 
@@ -218,7 +264,7 @@ function _getFormInputValue(e, fieldName) {
 function _buildDetailedAnalysisUrl(result) {
   const baseUrl =
     PropertiesService.getScriptProperties().getProperty(MAIN_WEBSITE_URL_PROPERTY) ||
-    'https://www.relume.io/app/project/P3198235_N9ubQWEUeJYt3MCAocflvWoO1S7G4A174fzr922cte0#mode=design';
+    'https://ishalanjekar.github.io/api-project-2/';
 
   const params = [];
 
