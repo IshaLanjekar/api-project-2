@@ -9,11 +9,25 @@
     h1, h2 { color: #111827; }
     a { color: #1a73e8; }
     .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    .pill { display: inline-block; margin-right: 8px; margin-bottom: 8px; padding: 4px 10px; border-radius: 999px; background: #eef2ff; color: #1f3a8a; font-size: 13px; }
+    .ok { color: #166534; font-weight: 700; }
+    .warn { color: #991b1b; font-weight: 700; }
   </style>
 </head>
 <body>
   <h1>Spam Filter Assistant</h1>
   <p>A Gmail add-on that helps classify currently opened emails as Spam or Not Spam.</p>
+
+  <div class="card" id="analysis-card" style="display: none;">
+    <h2>Detailed Analysis</h2>
+    <p><strong>Classification:</strong> <span id="result-label"></span></p>
+    <p><strong>Confidence:</strong> <span id="result-confidence"></span></p>
+    <p><strong>Recommendation:</strong> <span id="result-recommendation"></span></p>
+    <div id="keywords-wrap" style="display: none;">
+      <p><strong>Matched Keywords:</strong></p>
+      <div id="keyword-pills"></div>
+    </div>
+  </div>
 
   <div class="card">
     <h2>About</h2>
@@ -30,5 +44,55 @@
     <h2>Support</h2>
     <p>Email: ishalanjekar@gmail.com</p>
   </div>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const label = params.get('label');
+      const confidence = params.get('confidence');
+      const keywords = params.get('keywords');
+
+      if (!label && !confidence && !keywords) {
+        return;
+      }
+
+      const analysisCard = document.getElementById('analysis-card');
+      const labelNode = document.getElementById('result-label');
+      const confidenceNode = document.getElementById('result-confidence');
+      const recommendationNode = document.getElementById('result-recommendation');
+      const keywordsWrap = document.getElementById('keywords-wrap');
+      const keywordPills = document.getElementById('keyword-pills');
+
+      const cleanLabel = (label || 'Unknown').trim();
+      const cleanConfidence = confidence ? confidence.trim() + '%' : 'N/A';
+      labelNode.textContent = cleanLabel;
+      labelNode.className = cleanLabel.toLowerCase() === 'spam' ? 'warn' : 'ok';
+      confidenceNode.textContent = cleanConfidence;
+
+      recommendationNode.textContent =
+        cleanLabel.toLowerCase() === 'spam'
+          ? 'Treat this email with caution. Avoid unknown links or attachments.'
+          : 'This email appears safe based on current model output.';
+
+      if (keywords) {
+        const parsed = keywords
+          .split(',')
+          .map((k) => k.trim())
+          .filter(Boolean);
+
+        if (parsed.length) {
+          keywordsWrap.style.display = 'block';
+          parsed.forEach((word) => {
+            const span = document.createElement('span');
+            span.className = 'pill';
+            span.textContent = word;
+            keywordPills.appendChild(span);
+          });
+        }
+      }
+
+      analysisCard.style.display = 'block';
+    })();
+  </script>
 </body>
 </html>
