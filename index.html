@@ -430,6 +430,13 @@
       grid-template-columns: 1fr auto;
     }
 
+    .connect-tools {
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr auto;
+    }
+
     .kw-tools input {
       height: 42px;
       border: 1px solid rgba(0, 128, 128, 0.35);
@@ -484,7 +491,8 @@
       .actions { display: none; }
       .menu { gap: 14px; }
 
-      .kw-tools { grid-template-columns: 1fr; }
+      .kw-tools,
+      .connect-tools { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -517,16 +525,22 @@
       </div>
       <div class="hero-card">
         <p style="margin:0;color:#12343f;font-weight:600;">Spam Filter Assistant</p>
-        <p style="margin:8px 0 0;color:#2c4e59;">Set keywords, analyze instantly, and open detailed analysis in one click.</p>
+        <p style="margin:8px 0 0;color:#2c4e59;">Connect your Gmail, set trusted keywords, and use the add-on to fetch inbox analysis.</p>
+        <p id="heroGmailLine" style="margin:10px 0 0;color:#0f4d4d;font-weight:600;">Connected Gmail: not set</p>
       </div>
     </div>
   </section>
 
   <section id="setup" class="section">
     <div class="container">
-      <h2 class="section-title">Set your keywords first</h2>
-      <p class="section-sub">Before fetching emails, set keywords important to you. Messages matching these keywords get trusted priority.</p>
+      <h2 class="section-title">Connect Gmail and set your keywords</h2>
+      <p class="section-sub">Enter your Gmail address for the dashboard, then set trusted keywords. Inbox fetching still runs in the Gmail add-on because only the signed-in Gmail app can access mailbox data safely.</p>
       <div class="card" style="padding:20px;">
+        <div class="connect-tools">
+          <input id="gmailInput" type="email" placeholder="yourname@gmail.com">
+          <button id="gmailSaveBtn" class="btn btn-danger" type="button">Save Gmail</button>
+        </div>
+        <p id="gmailStatus" style="margin:10px 0 0;color:#144554;">No Gmail connected yet.</p>
         <div style="background:rgba(0,128,128,0.12);color:#0f4d4d;border-radius:8px;padding:12px;">Examples: your name, project names, company name, meeting, invoice, internship.</div>
         <div class="kw-tools">
           <input id="kwInput" type="text" placeholder="e.g. meeting, invoice, project-name">
@@ -534,7 +548,8 @@
         </div>
         <div id="kwChips" class="kw-chips"></div>
         <p id="kwStatus" style="margin-top:14px;color:#144554;">No keywords set yet.</p>
-        <a id="continueBtn" class="btn btn-danger" href="#how" style="margin-top:10px;">Continue - Fetch & Analyze Emails</a>
+        <a id="continueBtn" class="btn btn-danger" href="#analysis" style="margin-top:10px;">Open Gmail Add-on to Fetch Inbox</a>
+        <p style="margin-top:12px;color:#415263;">This page keeps your setup, keywords, and analysis dashboard. The Gmail add-on is where inbox emails are fetched and analyzed.</p>
       </div>
     </div>
   </section>
@@ -777,11 +792,16 @@
       const matched = (params.get('keywords') || '').split(',').map((x) => x.trim()).filter(Boolean);
 
       const STORAGE_KEY = 'spam_detector_keywords';
+      const GMAIL_KEY = 'spam_detector_gmail';
+      const gmailInput = document.getElementById('gmailInput');
+      const gmailSaveBtn = document.getElementById('gmailSaveBtn');
+      const gmailStatus = document.getElementById('gmailStatus');
       const kwInput = document.getElementById('kwInput');
       const kwAddBtn = document.getElementById('kwAddBtn');
       const kwChips = document.getElementById('kwChips');
       const kwStatus = document.getElementById('kwStatus');
       const continueBtn = document.getElementById('continueBtn');
+      const heroGmailLine = document.getElementById('heroGmailLine');
 
       function normalize(word) {
         return (word || '').toLowerCase().trim();
@@ -801,12 +821,31 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(keywords));
       }
 
+      function readGmail() {
+        try {
+          return localStorage.getItem(GMAIL_KEY) || '';
+        } catch (e) {
+          return '';
+        }
+      }
+
+      function writeGmail(value) {
+        localStorage.setItem(GMAIL_KEY, value);
+      }
+
       function unique(list) {
         return Array.from(new Set(list.map(normalize).filter(Boolean))).slice(0, 40);
       }
 
       let keywords = unique(readKeywords().concat(matched));
       writeKeywords(keywords);
+
+      const savedGmail = readGmail();
+      if (savedGmail) {
+        gmailInput.value = savedGmail;
+        gmailStatus.textContent = 'Saved Gmail: ' + savedGmail;
+        heroGmailLine.textContent = 'Connected Gmail: ' + savedGmail;
+      }
 
       function renderKeywords() {
         kwChips.innerHTML = '';
@@ -842,9 +881,22 @@
         renderKeywords();
       });
 
+      gmailSaveBtn.addEventListener('click', function () {
+        const gmail = (gmailInput.value || '').trim().toLowerCase();
+        if (!gmail || !gmail.includes('@')) {
+          gmailStatus.textContent = 'Enter a valid Gmail address.';
+          return;
+        }
+
+        writeGmail(gmail);
+        gmailStatus.textContent = 'Saved Gmail: ' + gmail;
+        heroGmailLine.textContent = 'Connected Gmail: ' + gmail;
+      });
+
       continueBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        kwStatus.textContent = 'Use the Gmail add-on button to fetch and analyze your inbox. Website does not have Gmail mailbox access.';
+        document.getElementById('security').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        kwStatus.textContent = 'Open the Gmail add-on inside Gmail to fetch your inbox emails with these keywords.';
       });
 
       renderKeywords();
