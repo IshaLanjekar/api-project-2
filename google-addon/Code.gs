@@ -42,8 +42,8 @@ function buildHomeCard() {
     )
     .addWidget(
       CardService.newTextButton()
-        .setText('Fetch 30 Inbox Emails')
-        .setOnClickAction(CardService.newAction().setFunctionName('fetchInboxEmails'))
+        .setText('Continue - Fetch & Analyze Emails')
+        .setOnClickAction(CardService.newAction().setFunctionName('fetchAndAnalyzeInboxEmails'))
     );
 
   return [
@@ -169,6 +169,63 @@ function fetchInboxEmails(e) {
       .build();
   } catch (err) {
     return _notify('Could not fetch inbox emails: ' + err.message);
+  }
+}
+
+function fetchAndAnalyzeInboxEmails(e) {
+  try {
+    const threads = GmailApp.search('in:inbox', 0, 30);
+    if (!threads.length) {
+      return _notify('No inbox emails found.');
+    }
+
+    const section = CardService.newCardSection()
+      .addWidget(
+        CardService.newTextParagraph().setText(
+          'Latest inbox emails analyzed from your Gmail box.'
+        )
+      );
+
+    threads.forEach(function (thread, index) {
+      const message = thread.getMessages()[thread.getMessageCount() - 1];
+      const subject = (message.getSubject() || '(No subject)').substring(0, 120);
+      const from = (message.getFrom() || '').substring(0, 80);
+      const plainBody = message.getPlainBody() || '';
+      const trimmedBody = plainBody.slice(0, MAX_TEXT_LENGTH);
+      const payload = {
+        text: [subject, trimmedBody].join('\n\n'),
+        keywords: _getUserKeywords()
+      };
+
+      let line = '<b>' + (index + 1) + '.</b> ' + subject + '<br/>' + from;
+
+      try {
+        const result = _callSpamApi(payload);
+        const spamValue = Number(result.spam) === 1;
+        const label = result.label || (spamValue ? 'Spam' : 'Not Spam');
+        const confidenceText = typeof result.confidence === 'number' ? ' | ' + Math.round(result.confidence * 100) + '%' : '';
+        line += '<br/><b>' + label + '</b>' + confidenceText;
+
+        if (result.keyword_matches && result.keyword_matches.length) {
+          line += '<br/>Keywords: ' + result.keyword_matches.join(', ');
+        }
+      } catch (analysisError) {
+        line += '<br/><i>Analysis unavailable for this email.</i>';
+      }
+
+      section.addWidget(CardService.newTextParagraph().setText(line));
+    });
+
+    const card = CardService.newCardBuilder()
+      .setHeader(CardService.newCardHeader().setTitle('Inbox Analysis'))
+      .addSection(section)
+      .build();
+
+    return CardService.newActionResponseBuilder()
+      .setNavigation(CardService.newNavigation().pushCard(card))
+      .build();
+  } catch (err) {
+    return _notify('Could not analyze inbox emails: ' + err.message);
   }
 }
 
