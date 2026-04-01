@@ -13,7 +13,7 @@ function setApiBaseUrl() {
 function setMainWebsiteUrl() {
   PropertiesService.getScriptProperties().setProperty(
     MAIN_WEBSITE_URL_PROPERTY,
-    'https://ishalanjekar.github.io/api-project-2/'
+    'https://www.relume.io/app/project/P3198235_N9ubQWEUeJYt3MCAocflvWoO1S7G4A174fzr922cte0#mode=design'
   );
 }
 
@@ -218,9 +218,8 @@ function _getFormInputValue(e, fieldName) {
 function _buildDetailedAnalysisUrl(result) {
   const baseUrl =
     PropertiesService.getScriptProperties().getProperty(MAIN_WEBSITE_URL_PROPERTY) ||
-    'https://ishalanjekar.github.io/api-project-2/';
+    'https://www.relume.io/app/project/P3198235_N9ubQWEUeJYt3MCAocflvWoO1S7G4A174fzr922cte0#mode=design';
 
-  const normalizedBase = baseUrl.replace(/\/$/, '');
   const params = [];
 
   if (result && result.label) {
@@ -233,11 +232,16 @@ function _buildDetailedAnalysisUrl(result) {
     params.push('keywords=' + encodeURIComponent(result.keyword_matches.join(',')));
   }
 
+  const hashIndex = baseUrl.indexOf('#');
+  const baseWithoutHash = hashIndex >= 0 ? baseUrl.slice(0, hashIndex) : baseUrl;
+  const hashPart = hashIndex >= 0 ? baseUrl.slice(hashIndex) : '';
+  const separator = baseWithoutHash.indexOf('?') >= 0 ? '&' : '?';
+
   if (!params.length) {
-    return normalizedBase + '/';
+    return baseUrl;
   }
 
-  return normalizedBase + '/?' + params.join('&');
+  return baseWithoutHash + separator + params.join('&') + hashPart;
 }
 
 function _notify(text) {
