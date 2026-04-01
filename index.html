@@ -300,16 +300,16 @@
 
     .cta-band {
       text-align: center;
-      background: rgba(245, 255, 250, 0.4);
+      background: rgba(245, 255, 250, 0.62);
       color: #1f243b;
       padding: 58px 0;
       backdrop-filter: blur(10px);
     }
 
     .faq-item {
-      border: 1px solid rgba(255, 255, 255, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.68);
       border-radius: 10px;
-      background: rgba(245, 255, 250, 0.42);
+      background: rgba(245, 255, 250, 0.64);
       color: #203245;
       margin-bottom: 12px;
       overflow: hidden;
@@ -395,10 +395,10 @@
     }
 
     .footer {
-      background: rgba(216, 215, 246, 0.85);
+      background: rgba(245, 255, 250, 0.7);
       color: #243348;
       padding: 26px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.7);
+      border-top: 1px solid rgba(255, 255, 255, 0.78);
       backdrop-filter: blur(12px);
     }
 
@@ -411,21 +411,6 @@
     }
 
     .footer a { color: #1f4a56; text-decoration: none; }
-
-    .analysis-banner {
-      display: none;
-      position: sticky;
-      top: 62px;
-      z-index: 9;
-      background: rgba(255, 255, 255, 0.72);
-      border: 1px solid rgba(255, 255, 255, 0.78);
-      border-radius: 10px;
-      margin-top: 12px;
-      padding: 12px;
-      color: #1f1a48;
-    }
-
-    .analysis-banner strong { font-size: 16px; }
 
     .pill {
       display: inline-block;
@@ -519,14 +504,6 @@
       </div>
     </div>
   </header>
-
-  <div class="container">
-    <div id="analysisBanner" class="analysis-banner">
-      <strong id="abLabel">Detailed analysis</strong>
-      <div id="abMeta" style="margin-top: 6px;"></div>
-      <div id="abKeywords"></div>
-    </div>
-  </div>
 
   <section id="home" class="hero">
     <div class="container hero-grid">
@@ -756,8 +733,8 @@
       </div>
 
       <div class="carousel-controls">
-        <button id="prevSlide" class="btn btn-outline" type="button" style="color:#2a256d;border-color:#cfc8ff;">&larr;</button>
-        <button id="nextSlide" class="btn btn-outline" type="button" style="color:#2a256d;border-color:#cfc8ff;">&rarr;</button>
+        <button id="prevSlide" class="btn btn-outline" type="button" style="color:#0f4d4d;border-color:rgba(0,128,128,0.35);">&larr;</button>
+        <button id="nextSlide" class="btn btn-outline" type="button" style="color:#0f4d4d;border-color:rgba(0,128,128,0.35);">&rarr;</button>
       </div>
     </div>
   </section>
@@ -798,24 +775,6 @@
       const label = (params.get('label') || '').trim();
       const confidence = (params.get('confidence') || '').trim();
       const matched = (params.get('keywords') || '').split(',').map((x) => x.trim()).filter(Boolean);
-
-      const analysisBanner = document.getElementById('analysisBanner');
-      const abLabel = document.getElementById('abLabel');
-      const abMeta = document.getElementById('abMeta');
-      const abKeywords = document.getElementById('abKeywords');
-
-      if (label || confidence || matched.length) {
-        analysisBanner.style.display = 'block';
-        abLabel.textContent = 'Detailed analysis: ' + (label || 'Unknown');
-        abMeta.textContent = 'Confidence: ' + (confidence ? confidence + '%' : 'N/A');
-        abKeywords.innerHTML = '';
-        matched.forEach(function (word) {
-          const pill = document.createElement('span');
-          pill.className = 'pill';
-          pill.textContent = word;
-          abKeywords.appendChild(pill);
-        });
-      }
 
       const STORAGE_KEY = 'spam_detector_keywords';
       const kwInput = document.getElementById('kwInput');
