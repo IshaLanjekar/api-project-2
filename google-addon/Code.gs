@@ -1,4 +1,5 @@
 const API_BASE_URL_PROPERTY = 'SPAM_API_BASE_URL';
+const MAX_TEXT_LENGTH = 4000;
 
 function setApiBaseUrl() {
   PropertiesService.getScriptProperties().setProperty(
@@ -43,11 +44,11 @@ function analyzeCurrentEmail(e) {
     return _notify('Message not found.');
   }
 
+  const subject = message.getSubject() || '';
+  const plainBody = message.getPlainBody() || '';
+  const trimmedBody = plainBody.slice(0, MAX_TEXT_LENGTH);
   const payload = {
-    text: [
-      message.getSubject() || '',
-      message.getPlainBody() || ''
-    ].join('\n\n')
+    text: [subject, trimmedBody].join('\n\n')
   };
 
   try {
@@ -70,6 +71,14 @@ function analyzeCurrentEmail(e) {
         )
       );
 
+    if (plainBody.length > MAX_TEXT_LENGTH) {
+      section.addWidget(
+        CardService.newTextParagraph().setText(
+          'Note: Only the first ' + MAX_TEXT_LENGTH + ' characters were analyzed for speed.'
+        )
+      );
+    }
+
     const card = CardService.newCardBuilder()
       .setHeader(CardService.newCardHeader().setTitle('Spam Check Result'))
       .addSection(section)
@@ -79,7 +88,9 @@ function analyzeCurrentEmail(e) {
       .setNavigation(CardService.newNavigation().pushCard(card))
       .build();
   } catch (err) {
-    return _notify('API call failed: ' + err.message);
+    return _notify(
+      'API call timed out or failed. Retry in 10-20 seconds (Render cold start) or open a shorter email.'
+    );
   }
 }
 
