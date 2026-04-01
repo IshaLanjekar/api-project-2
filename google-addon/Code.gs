@@ -179,42 +179,40 @@ function fetchAndAnalyzeInboxEmails(e) {
       return _notify('No inbox emails found.');
     }
 
+    const items = threads.map(function (thread) {
+      const message = thread.getMessages()[thread.getMessageCount() - 1];
+      const subject = (message.getSubject() || '(No subject)').substring(0, 160);
+      const plainBody = message.getPlainBody() || '';
+      const trimmedBody = plainBody.slice(0, MAX_TEXT_LENGTH);
+      return {
+        subject: subject,
+        text: [subject, trimmedBody].join('\n\n')
+      };
+    });
+
+    const batchResult = _callSpamApiBatch({
+      items: items,
+      keywords: _getUserKeywords()
+    });
+
+    const summary = batchResult.summary || {};
+    const total = Number(summary.total || items.length);
+    const spamCount = Number(summary.spam || 0);
+    const safeCount = Number(summary.safe || 0);
+
     const section = CardService.newCardSection()
       .addWidget(
         CardService.newTextParagraph().setText(
-          'Latest inbox emails analyzed from your Gmail box.'
+          '<b>Inbox Analysis Summary</b><br/>Latest inbox emails analyzed from your Gmail box.'
+        )
+      )
+      .addWidget(
+        CardService.newTextParagraph().setText(
+          '<b>Total analyzed:</b> ' + total + '<br/>' +
+          '<b>Spam:</b> ' + spamCount + '<br/>' +
+          '<b>Safe:</b> ' + safeCount
         )
       );
-
-    threads.forEach(function (thread, index) {
-      const message = thread.getMessages()[thread.getMessageCount() - 1];
-      const subject = (message.getSubject() || '(No subject)').substring(0, 120);
-      const from = (message.getFrom() || '').substring(0, 80);
-      const plainBody = message.getPlainBody() || '';
-      const trimmedBody = plainBody.slice(0, MAX_TEXT_LENGTH);
-      const payload = {
-        text: [subject, trimmedBody].join('\n\n'),
-        keywords: _getUserKeywords()
-      };
-
-      let line = '<b>' + (index + 1) + '.</b> ' + subject + '<br/>' + from;
-
-      try {
-        const result = _callSpamApi(payload);
-        const spamValue = Number(result.spam) === 1;
-        const label = result.label || (spamValue ? 'Spam' : 'Not Spam');
-        const confidenceText = typeof result.confidence === 'number' ? ' | ' + Math.round(result.confidence * 100) + '%' : '';
-        line += '<br/><b>' + label + '</b>' + confidenceText;
-
-        if (result.keyword_matches && result.keyword_matches.length) {
-          line += '<br/>Keywords: ' + result.keyword_matches.join(', ');
-        }
-      } catch (analysisError) {
-        line += '<br/><i>Analysis unavailable for this email.</i>';
-      }
-
-      section.addWidget(CardService.newTextParagraph().setText(line));
-    });
 
     const card = CardService.newCardBuilder()
       .setHeader(CardService.newCardHeader().setTitle('Inbox Analysis'))
@@ -227,6 +225,29 @@ function fetchAndAnalyzeInboxEmails(e) {
   } catch (err) {
     return _notify('Could not analyze inbox emails: ' + err.message);
   }
+}
+
+function _callSpamApiBatch(payload) {
+  const baseUrl = PropertiesService.getScriptProperties().getProperty(API_BASE_URL_PROPERTY);
+  if (!baseUrl) {
+    throw new Error('Missing script property SPAM_API_BASE_URL');
+  }
+
+  const response = UrlFetchApp.fetch(baseUrl.replace(/\/$/, '') + '/addon/predict-batch', {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  });
+
+  const status = response.getResponseCode();
+  const body = response.getContentText();
+
+  if (status < 200 || status >= 300) {
+    throw new Error('HTTP ' + status + ': ' + body);
+  }
+
+  return JSON.parse(body);
 }
 
 function saveKeywords(e) {

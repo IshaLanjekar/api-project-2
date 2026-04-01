@@ -135,7 +135,7 @@
     .hero {
       background:
         linear-gradient(rgba(95, 96, 163, 0.48), rgba(95, 96, 163, 0.48)),
-        url('https://img.icons8.com/3d-fluency/188/shield.png') right 8% center/220px no-repeat,
+        url('https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=500&q=80') right 8% center/320px no-repeat,
         radial-gradient(circle at 30% 80%, rgba(0, 128, 128, 0.2), rgba(0, 128, 128, 0));
       color: #1b1f35;
       padding: 92px 0 82px;
@@ -545,7 +545,7 @@
       <p class="section-sub">Add names and keywords that matter most to you.</p>
       <div class="grid-3">
         <article class="card">
-          <img src="https://img.icons8.com/3d-fluency/480/secured-letter.png" alt="Set keywords">
+          <img src="https://images.unsplash.com/photo-1584433144859-1fc3ab64a957?auto=format&fit=crop&w=900&q=80" alt="Set keywords">
           <div class="card-body">
             <p>Step one</p>
             <h3 style="font-size:30px;">Set your keywords</h3>
@@ -554,7 +554,7 @@
           </div>
         </article>
         <article class="card">
-          <img src="https://img.icons8.com/3d-fluency/480/new-post.png" alt="Open email">
+          <img src="https://images.unsplash.com/photo-1620553963043-b9d0c9a3dcd1?auto=format&fit=crop&w=900&q=80" alt="Open email">
           <div class="card-body">
             <p>Step two</p>
             <h3 style="font-size:30px;">Open any email in Gmail</h3>
@@ -563,7 +563,7 @@
           </div>
         </article>
         <article class="card">
-          <img src="https://img.icons8.com/3d-fluency/480/combo-chart.png" alt="See results">
+          <img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=900&q=80" alt="See results">
           <div class="card-body">
             <p>Step three</p>
             <h3 style="font-size:30px;">See instant classification</h3>
@@ -581,7 +581,7 @@
       <p class="section-sub">Four core capabilities built for inbox control.</p>
       <div class="grid-3">
         <article class="card">
-          <img src="https://img.icons8.com/3d-fluency/480/statistics.png" alt="Confidence scoring">
+          <img src="https://images.unsplash.com/photo-1551281044-8c700e6e7f91?auto=format&fit=crop&w=900&q=80" alt="Confidence scoring">
           <div class="card-body">
             <h3 style="font-size:30px;">Smart classification with confidence scoring</h3>
             <p>Every email gets a confidence value from 0 to 100.</p>
@@ -589,7 +589,7 @@
           </div>
         </article>
         <article class="card">
-          <img src="https://img.icons8.com/3d-fluency/480/checklist.png" alt="Keyword whitelist">
+          <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80" alt="Keyword whitelist">
           <div class="card-body">
             <h3 style="font-size:30px;">Keyword whitelisting for trusted senders</h3>
             <p>Emails matching your keywords bypass false spam flags.</p>
@@ -597,7 +597,7 @@
           </div>
         </article>
         <article class="card">
-          <img src="https://img.icons8.com/3d-fluency/480/time-machine.png" alt="Realtime analysis">
+          <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=900&q=80" alt="Realtime analysis">
           <div class="card-body">
             <h3 style="font-size:30px;">Real-time analysis without data storage</h3>
             <p>Classification happens instantly and respects privacy.</p>
@@ -614,7 +614,7 @@
       <p class="section-sub">The detector works the way you need it to work.</p>
       <div class="mosaic">
         <article class="tile big">
-          <img src="https://img.icons8.com/3d-fluency/480/shield.png" alt="Spam dashboard">
+          <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80" alt="Spam dashboard">
         </article>
         <article class="tile one">
           <h3 style="font-size:30px;">Spam detection that catches junk</h3>
@@ -649,7 +649,7 @@
           <a class="btn btn-main" href="#setup">Install</a>
           <a class="btn btn-outline" href="#how" style="margin-left:8px;">Learn</a>
         </div>
-        <img src="https://img.icons8.com/3d-fluency/480/mailbox-closed-flag-up.png" alt="Gmail integration">
+        <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80" alt="Gmail integration">
       </article>
       <article class="split-panel" style="background:#fff;color:#171536;">
         <div class="copy">
@@ -662,7 +662,7 @@
           </ul>
           <a class="btn btn-outline" style="border-color:rgba(0,128,128,0.35);color:#0f4d4d;" href="#faq">Details</a>
         </div>
-        <img src="https://img.icons8.com/3d-fluency/480/privacy.png" alt="Security shield">
+        <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=1200&q=80" alt="Security shield">
       </article>
     </div>
   </section>
@@ -844,17 +844,7 @@
 
       continueBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        const next = new URL(window.location.href);
-        if (keywords.length) {
-          next.searchParams.set('keywords', keywords.join(','));
-        }
-        if (label) {
-          next.searchParams.set('label', label);
-        }
-        if (confidence) {
-          next.searchParams.set('confidence', confidence);
-        }
-        window.location.href = next.toString();
+        kwStatus.textContent = 'Use the Gmail add-on button to fetch and analyze your inbox. Website does not have Gmail mailbox access.';
       });
 
       renderKeywords();

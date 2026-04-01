@@ -158,5 +158,80 @@ def addon_predict():
         }
     )
 
+
+@app.route("/addon/predict-batch", methods=["POST"])
+def addon_predict_batch():
+    """Batch prediction endpoint for inbox analysis in Gmail add-on."""
+    data = request.get_json(silent=True) or {}
+    items = data.get("items") or []
+
+    if not isinstance(items, list) or not items:
+        return jsonify({"error": "Missing or empty 'items'"}), 400
+
+    normalized_items = []
+    texts = []
+    for item in items[:30]:
+        subject = str((item or {}).get("subject") or "")
+        text = str((item or {}).get("text") or "").strip()
+        if not text:
+            continue
+        normalized_items.append({"subject": subject})
+        texts.append(text)
+
+    if not texts:
+        return jsonify({"error": "No valid texts found in items"}), 400
+
+    transformed = vectorizer.transform(texts)
+
+    use_proba = hasattr(model, "predict_proba")
+    probabilities = model.predict_proba(transformed) if use_proba else None
+    base_predictions = model.predict(transformed)
+
+    keywords = sorted(set(_load_default_keywords() + _extract_request_keywords(data)))
+
+    results = []
+    spam_count = 0
+    safe_count = 0
+
+    for idx, text in enumerate(texts):
+        spam_score = float(probabilities[idx][1]) if use_proba else None
+        confidence = float(max(probabilities[idx])) if use_proba else None
+        prediction = int(base_predictions[idx])
+
+        if use_proba:
+            prediction = 1 if spam_score >= SPAM_THRESHOLD else 0
+
+        keyword_matches = _find_keyword_matches(text, keywords)
+        prediction, keyword_override = _apply_keyword_rule(prediction, spam_score, keyword_matches)
+
+        if prediction == 1:
+            spam_count += 1
+        else:
+            safe_count += 1
+
+        results.append(
+            {
+                "subject": normalized_items[idx]["subject"],
+                "spam": prediction,
+                "label": "Spam" if prediction == 1 else "Not Spam",
+                "spam_score": spam_score,
+                "confidence": confidence,
+                "keyword_matches": keyword_matches,
+                "keyword_override": keyword_override,
+            }
+        )
+
+    return jsonify(
+        {
+            "summary": {
+                "total": len(results),
+                "spam": spam_count,
+                "safe": safe_count,
+            },
+            "results": results,
+            "threshold": SPAM_THRESHOLD,
+        }
+    )
+
 if __name__ == "__main__":
     app.run()
