@@ -3,7 +3,7 @@ const API_BASE_URL_PROPERTY = 'SPAM_API_BASE_URL';
 function setApiBaseUrl() {
   PropertiesService.getScriptProperties().setProperty(
     API_BASE_URL_PROPERTY,
-    'https://YOUR-DEPLOYED-API-DOMAIN'
+    'https://email-spam-filter-api.onrender.com'
   );
 }
 
