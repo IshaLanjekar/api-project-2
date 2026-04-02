@@ -135,7 +135,7 @@
     .hero {
       background:
         linear-gradient(rgba(95, 96, 163, 0.48), rgba(95, 96, 163, 0.48)),
-        url('https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=500&q=80') right 8% center/320px no-repeat,
+        url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1600&q=80') right 8% top 78px/640px no-repeat,
         radial-gradient(circle at 30% 80%, rgba(0, 128, 128, 0.2), rgba(0, 128, 128, 0));
       color: #1b1f35;
       padding: 92px 0 82px;
@@ -239,7 +239,7 @@
     }
 
     .tile {
-      background: var(--panel);
+      background: rgba(236, 247, 247, 0.74);
       border: 1px solid rgba(255, 255, 255, 0.58);
       border-radius: 12px;
       padding: 20px;
@@ -287,6 +287,11 @@
       grid-template-columns: 1fr;
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+    }
+
+    .split-panel.white {
+      background: #ffffff;
+      color: #171536;
     }
 
     .split-panel .copy { padding: 26px; }
@@ -437,6 +442,54 @@
       grid-template-columns: 1fr auto;
     }
 
+    .manual-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .textarea {
+      width: 100%;
+      min-height: 180px;
+      border: 1px solid rgba(0, 128, 128, 0.35);
+      border-radius: 12px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.74);
+      color: #1c1d2f;
+      font: inherit;
+      resize: vertical;
+    }
+
+    .result-box {
+      background: rgba(255, 255, 255, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 220px;
+      backdrop-filter: blur(10px);
+    }
+
+    .result-badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: rgba(0, 128, 128, 0.12);
+      color: #0f4d4d;
+    }
+
+    .result-badge.spam {
+      background: rgba(240, 79, 103, 0.12);
+      color: #8f1f35;
+    }
+
+    .result-badge.safe {
+      background: rgba(25, 194, 127, 0.12);
+      color: #0c5f46;
+    }
+
     .kw-tools input {
       height: 42px;
       border: 1px solid rgba(0, 128, 128, 0.35);
@@ -474,6 +527,94 @@
       padding: 0;
     }
 
+    .demo-result {
+      margin-top: 14px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 12px;
+      padding: 14px;
+      color: #243348;
+    }
+
+    .demo-result strong {
+      color: #0f4d4d;
+    }
+
+    .addon-analysis-box {
+      margin: 14px auto 0;
+      max-width: 720px;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: 12px;
+      padding: 16px;
+      color: #243348;
+      display: none;
+      box-shadow: 0 10px 24px rgba(55, 73, 95, 0.12);
+    }
+
+    .addon-analysis-box.show {
+      display: block;
+    }
+
+    .addon-analysis-box h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 16, 32, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      padding: 16px;
+    }
+
+    .overlay.open {
+      display: flex;
+    }
+
+    .dialog {
+      width: min(620px, 100%);
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 20px 48px rgba(7, 19, 33, 0.28);
+      padding: 20px;
+      color: #1d2d3e;
+    }
+
+    .dialog h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .dialog p {
+      margin: 0 0 8px;
+      color: #3f4b5c;
+    }
+
+    .dialog pre {
+      margin: 8px 0 0;
+      background: #f2f8f8;
+      border: 1px solid #d8ecec;
+      border-radius: 10px;
+      padding: 12px;
+      white-space: pre-wrap;
+      color: #173742;
+      font-family: "Inter", "Segoe UI", sans-serif;
+      font-size: 14px;
+    }
+
+    .dialog-actions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
     @media (max-width: 1000px) {
       .hero-grid,
       .split,
@@ -492,7 +633,15 @@
       .menu { gap: 14px; }
 
       .kw-tools,
-      .connect-tools { grid-template-columns: 1fr; }
+      .connect-tools,
+      .manual-grid { grid-template-columns: 1fr; }
+
+      .hero {
+        background:
+          linear-gradient(rgba(95, 96, 163, 0.48), rgba(95, 96, 163, 0.48)),
+          url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80') center top 80px/420px no-repeat,
+          radial-gradient(circle at 30% 80%, rgba(0, 128, 128, 0.2), rgba(0, 128, 128, 0));
+      }
     }
   </style>
 </head>
@@ -508,7 +657,7 @@
       </nav>
       <div class="actions">
         <a class="btn btn-outline" href="#setup">Try now</a>
-        <a class="btn btn-main" href="#setup">Install</a>
+        <button class="btn btn-main install-trigger" type="button">Install</button>
       </div>
     </div>
   </header>
@@ -519,7 +668,7 @@
         <h1>Gmail spam detector with your trusted keywords</h1>
         <p>AI-powered classification keeps your inbox clean. Set keywords for people and projects that matter, and they will never be marked as spam.</p>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn btn-main" href="#setup">Install</a>
+          <button class="btn btn-main install-trigger" type="button">Install</button>
           <a class="btn btn-outline" href="#features">Learn</a>
         </div>
       </div>
@@ -534,7 +683,7 @@
   <section id="setup" class="section">
     <div class="container">
       <h2 class="section-title">Connect Gmail and set your keywords</h2>
-      <p class="section-sub">Enter your Gmail address for the dashboard, then set trusted keywords. Inbox fetching still runs in the Gmail add-on because only the signed-in Gmail app can access mailbox data safely.</p>
+      <p class="section-sub">Use your Gmail, add your keywords, and run a demo fetch to see spam vs not spam counts before using the add-on.</p>
       <div class="card" style="padding:20px;">
         <div class="connect-tools">
           <input id="gmailInput" type="email" placeholder="yourname@gmail.com">
@@ -548,8 +697,30 @@
         </div>
         <div id="kwChips" class="kw-chips"></div>
         <p id="kwStatus" style="margin-top:14px;color:#144554;">No keywords set yet.</p>
-        <a id="continueBtn" class="btn btn-danger" href="#analysis" style="margin-top:10px;">Open Gmail Add-on to Fetch Inbox</a>
-        <p style="margin-top:12px;color:#415263;">This page keeps your setup, keywords, and analysis dashboard. The Gmail add-on is where inbox emails are fetched and analyzed.</p>
+        <button id="runDemoBtn" class="btn btn-danger" type="button" style="margin-top:10px;">Run Inbox Demo</button>
+        <div id="demoResult" class="demo-result">Demo ready. Save Gmail and add a few keywords, then click Run Inbox Demo.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="manual" class="section light">
+    <div class="container">
+      <h2 class="section-title">Analyze an email manually</h2>
+      <p class="section-sub">Paste the email text below and the model will classify it using your saved keywords. This is useful even when you are not inside Gmail.</p>
+      <div class="manual-grid">
+        <div class="card" style="padding:20px;">
+          <p style="margin-top:0;color:#144554;font-weight:700;">Paste email subject and body</p>
+          <textarea id="manualEmailInput" class="textarea" placeholder="Subject: ...\n\nPaste the email body here..."></textarea>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+            <button id="manualAnalyzeBtn" class="btn btn-danger" type="button">Analyze Email</button>
+            <button id="manualClearBtn" class="btn btn-outline" type="button" style="color:#0f4d4d;border-color:rgba(0,128,128,0.35);">Clear</button>
+          </div>
+          <p id="manualStatus" style="margin-top:12px;color:#415263;">Ready for analysis.</p>
+        </div>
+        <div class="result-box" id="manualResult">
+          <div class="result-badge safe">No analysis yet</div>
+          <p>Paste an email and click Analyze Email to see Spam / Not Spam, confidence, and matched keywords.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -560,30 +731,30 @@
       <p class="section-sub">Add names and keywords that matter most to you.</p>
       <div class="grid-3">
         <article class="card">
-          <img src="https://images.unsplash.com/photo-1584433144859-1fc3ab64a957?auto=format&fit=crop&w=900&q=80" alt="Set keywords">
+          <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=900&q=80" alt="Set keywords for trusted emails">
           <div class="card-body">
             <p>Step one</p>
             <h3 style="font-size:30px;">Set your keywords</h3>
             <p>Define trusted people, projects, and companies.</p>
-            <a class="btn btn-outline" href="#setup">Next</a>
+            <button class="btn btn-outline learn-example" type="button" data-topic="keywords">Learn</button>
           </div>
         </article>
         <article class="card">
-          <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=900&q=80" alt="Open email">
+          <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=900&q=80" alt="Open Gmail and fetch inbox">
           <div class="card-body">
             <p>Step two</p>
-            <h3 style="font-size:30px;">Open any email in Gmail</h3>
-            <p>The detector runs instantly on every message.</p>
-            <a class="btn btn-outline" href="#features">Next</a>
+            <h3 style="font-size:30px;">Fetch your inbox</h3>
+            <p>Process recent messages and classify them in seconds.</p>
+            <button class="btn btn-outline learn-example" type="button" data-topic="fetch">Learn</button>
           </div>
         </article>
         <article class="card">
-          <img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=900&q=80" alt="See results">
+          <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=900&q=80" alt="See spam and not spam results">
           <div class="card-body">
             <p>Step three</p>
-            <h3 style="font-size:30px;">See instant classification</h3>
-            <p>Know exactly why each email was classified.</p>
-            <a class="btn btn-outline" href="#analysis">Done</a>
+            <h3 style="font-size:30px;">See spam and not spam counts</h3>
+            <p>View clear totals and confidence for quick decisions.</p>
+            <button class="btn btn-outline learn-example" type="button" data-topic="results">Learn</button>
           </div>
         </article>
       </div>
@@ -593,14 +764,15 @@
   <section id="features" class="section dark">
     <div class="container">
       <h2 class="section-title">What makes it work</h2>
-      <p class="section-sub">Four core capabilities built for inbox control.</p>
+      <p class="section-sub">Three core capabilities built for inbox control.
+        <a class="btn btn-outline" href="#setup" style="margin-left:10px;">View</a>
+      </p>
       <div class="grid-3">
         <article class="card">
           <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80" alt="Confidence scoring">
           <div class="card-body">
             <h3 style="font-size:30px;">Smart classification with confidence scoring</h3>
             <p>Every email gets a confidence value from 0 to 100.</p>
-            <a class="btn btn-outline" href="#analysis">Learn</a>
           </div>
         </article>
         <article class="card">
@@ -608,7 +780,6 @@
           <div class="card-body">
             <h3 style="font-size:30px;">Keyword whitelisting for trusted senders</h3>
             <p>Emails matching your keywords bypass false spam flags.</p>
-            <a class="btn btn-outline" href="#setup">Learn</a>
           </div>
         </article>
         <article class="card">
@@ -616,7 +787,6 @@
           <div class="card-body">
             <h3 style="font-size:30px;">Real-time analysis without data storage</h3>
             <p>Classification happens instantly and respects privacy.</p>
-            <a class="btn btn-outline" href="#security">Learn</a>
           </div>
         </article>
       </div>
@@ -634,22 +804,22 @@
         <article class="tile one">
           <h3 style="font-size:30px;">Spam detection that catches junk</h3>
           <p>AI learns what matters to your inbox.</p>
-          <a class="btn btn-outline" href="#analysis">Explore</a>
+          <a class="btn btn-outline" href="#gmail-builtin">Explore</a>
         </article>
         <article class="tile two">
           <h3 style="font-size:30px;">Your keywords protect what matters most</h3>
           <p>Nothing important gets filtered out.</p>
-          <a class="btn btn-outline" href="#setup">Explore</a>
+          <a class="btn btn-outline" href="#gmail-builtin">Explore</a>
         </article>
         <article class="tile three">
           <h3 style="font-size:30px;">Privacy stays yours and yours alone</h3>
           <p>No data collection, no tracking, no storage.</p>
-          <a class="btn btn-outline" href="#security">Explore</a>
+          <a class="btn btn-outline" href="#gmail-builtin">Explore</a>
         </article>
         <article class="tile four">
           <h3 style="font-size:30px;">Results come back in milliseconds</h3>
           <p>Every email analyzed instantly as it arrives.</p>
-          <a class="btn btn-outline" href="#analysis">Explore</a>
+          <a class="btn btn-outline" href="#gmail-builtin">Explore</a>
         </article>
       </div>
     </div>
@@ -657,14 +827,14 @@
 
   <section class="section dark" id="security">
     <div class="container split">
-      <article class="split-panel">
+      <article class="split-panel white" id="gmail-builtin">
         <div class="copy">
           <h2 style="font-size:30px;">Built right into Gmail where you work</h2>
           <p class="section-sub" style="margin-bottom:16px;">Open an email and see classification instantly without switching apps.</p>
-          <a class="btn btn-main" href="#setup">Install</a>
-          <a class="btn btn-outline" href="#how" style="margin-left:8px;">Learn</a>
+          <button class="btn btn-main install-trigger" type="button">Install</button>
+          <button class="btn btn-outline learn-example" type="button" data-topic="gmail" style="margin-left:8px;">Learn</button>
         </div>
-        <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80" alt="Gmail integration">
+        <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80" alt="Gmail integration dashboard">
       </article>
       <article class="split-panel" style="background:#fff;color:#171536;">
         <div class="copy">
@@ -675,7 +845,7 @@
             <li>Secure from the moment it arrives</li>
             <li>Machine learning that respects you</li>
           </ul>
-          <a class="btn btn-outline" style="border-color:rgba(0,128,128,0.35);color:#0f4d4d;" href="#faq">Details</a>
+          <button class="btn btn-outline learn-example" type="button" data-topic="privacy" style="border-color:rgba(0,128,128,0.35);color:#0f4d4d;">Learn</button>
         </div>
         <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=1200&q=80" alt="Security shield">
       </article>
@@ -686,8 +856,12 @@
     <div class="container">
       <h2 class="section-title" style="margin-bottom:8px;">Ready to clean your inbox</h2>
       <p class="section-sub" style="margin:0 auto 20px;">Start analyzing your emails with AI-powered detection and keyword control today.</p>
-      <a class="btn btn-main" href="#setup">Continue</a>
-      <a class="btn btn-outline" href="#features" style="margin-left:8px;">Learn</a>
+      <button class="btn btn-main install-trigger" type="button">Install</button>
+      <button class="btn btn-outline learn-example" type="button" data-topic="results" style="margin-left:8px;">Learn</button>
+      <div id="addonAnalysisBox" class="addon-analysis-box" aria-live="polite">
+        <h3>Detailed analysis from add-on</h3>
+        <p id="addonAnalysisText" style="margin:0;">Run analysis from Gmail add-on to see the result summary here.</p>
+      </div>
     </div>
   </section>
 
@@ -784,6 +958,17 @@
     </div>
   </footer>
 
+  <div id="guideOverlay" class="overlay" aria-hidden="true">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+      <h3 id="guideTitle">Guide</h3>
+      <p id="guideText">Details will appear here.</p>
+      <pre id="guideExample"></pre>
+      <div class="dialog-actions">
+        <button id="guideClose" class="btn btn-main" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function () {
       const params = new URLSearchParams(window.location.search);
@@ -800,11 +985,83 @@
       const kwAddBtn = document.getElementById('kwAddBtn');
       const kwChips = document.getElementById('kwChips');
       const kwStatus = document.getElementById('kwStatus');
-      const continueBtn = document.getElementById('continueBtn');
+      const runDemoBtn = document.getElementById('runDemoBtn');
+      const demoResult = document.getElementById('demoResult');
       const heroGmailLine = document.getElementById('heroGmailLine');
+      const manualEmailInput = document.getElementById('manualEmailInput');
+      const manualAnalyzeBtn = document.getElementById('manualAnalyzeBtn');
+      const manualClearBtn = document.getElementById('manualClearBtn');
+      const manualStatus = document.getElementById('manualStatus');
+      const manualResult = document.getElementById('manualResult');
+      const addonAnalysisBox = document.getElementById('addonAnalysisBox');
+      const addonAnalysisText = document.getElementById('addonAnalysisText');
+      const installTriggers = document.querySelectorAll('.install-trigger');
+      const learnButtons = document.querySelectorAll('.learn-example');
+      const guideOverlay = document.getElementById('guideOverlay');
+      const guideTitle = document.getElementById('guideTitle');
+      const guideText = document.getElementById('guideText');
+      const guideExample = document.getElementById('guideExample');
+      const guideClose = document.getElementById('guideClose');
+      const API_URL = 'https://email-spam-filter-api.onrender.com/addon/predict';
+      const FALLBACK_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700"%3E%3Crect width="1200" height="700" fill="%23eaf7f4"/%3E%3Crect x="80" y="90" width="1040" height="520" rx="28" fill="%23d7f0ee"/%3E%3Ctext x="600" y="365" text-anchor="middle" font-family="Segoe UI, Arial" font-size="44" fill="%230f4d4d"%3EGmail Spam Detector%3C/text%3E%3C/svg%3E';
+
+      const guideContent = {
+        install: {
+          title: 'Quick installation guide',
+          text: 'Install in less than 2 minutes and start filtering your inbox.',
+          example: '1) Open Gmail add-ons marketplace.\n2) Search for Gmail Spam Detector.\n3) Click Install and allow Gmail scope.\n4) Return here, connect Gmail, and add keywords.\n5) Run the inbox demo, then use it in Gmail.'
+        },
+        keywords: {
+          title: 'Keyword setup example',
+          text: 'Use people, projects, and business terms that must never be missed.',
+          example: 'Example keywords:\n- isha\n- internship\n- project alpha\n- invoice\n- team meeting\n\nResult: emails with these words get priority and avoid false spam.'
+        },
+        fetch: {
+          title: 'Inbox fetch example',
+          text: 'The app checks recent inbox emails and classifies each one.',
+          example: 'Sample run:\n- Emails scanned: 30\n- Spam: 6\n- Not Spam: 24\n- Top spam cues: urgent payment, claim reward, verify now'
+        },
+        results: {
+          title: 'Result view example',
+          text: 'You get a simple summary that is easy to trust at a glance.',
+          example: 'Output:\nNot Spam: 18\nSpam: 4\nSafe ratio: 81%\nMatched trusted keywords: isha, internship, meeting'
+        },
+        gmail: {
+          title: 'Built-in Gmail flow',
+          text: 'Run classification inside Gmail while reading emails.',
+          example: 'Open an email -> click add-on panel -> run detect -> read label + confidence + matched keyword.'
+        },
+        privacy: {
+          title: 'Privacy details',
+          text: 'Your inbox remains private with secure analysis-only requests.',
+          example: 'No permanent inbox storage\nHTTPS secured traffic\nKeyword list stays in your browser local storage'
+        },
+        capabilities: {
+          title: 'Three core capabilities',
+          text: 'What makes the product effective and practical.',
+          example: '1) Confidence-based spam classification\n2) Trusted keyword protection\n3) Real-time privacy-first analysis'
+        }
+      };
 
       function normalize(word) {
         return (word || '').toLowerCase().trim();
+      }
+
+      function renderAddonAnalysisFromQuery() {
+        if (!label && !confidence && !matched.length) {
+          return;
+        }
+
+        const cleanLabel = label || 'Not available';
+        const cleanConfidence = confidence ? confidence + '%' : 'N/A';
+        const matchedText = matched.length ? matched.join(', ') : 'None';
+
+        addonAnalysisText.innerHTML =
+          '<strong>Classification:</strong> ' + cleanLabel + '<br>' +
+          '<strong>Confidence:</strong> ' + cleanConfidence + '<br>' +
+          '<strong>Matched Keywords:</strong> ' + matchedText;
+
+        addonAnalysisBox.classList.add('show');
       }
 
       function readKeywords() {
@@ -893,13 +1150,164 @@
         heroGmailLine.textContent = 'Connected Gmail: ' + gmail;
       });
 
-      continueBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.getElementById('security').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        kwStatus.textContent = 'Open the Gmail add-on inside Gmail to fetch your inbox emails with these keywords.';
+      function openGuide(topic) {
+        const selected = guideContent[topic] || guideContent.install;
+        guideTitle.textContent = selected.title;
+        guideText.textContent = selected.text;
+        guideExample.textContent = selected.example;
+        guideOverlay.classList.add('open');
+        guideOverlay.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeGuide() {
+        guideOverlay.classList.remove('open');
+        guideOverlay.setAttribute('aria-hidden', 'true');
+      }
+
+      installTriggers.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          openGuide('install');
+        });
+      });
+
+      learnButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const topic = btn.getAttribute('data-topic') || 'keywords';
+          openGuide(topic);
+        });
+      });
+
+      document.querySelectorAll('img').forEach(function (img) {
+        img.addEventListener('error', function () {
+          if (img.src !== FALLBACK_IMAGE) {
+            img.src = FALLBACK_IMAGE;
+          }
+        });
+      });
+
+      guideClose.addEventListener('click', closeGuide);
+      guideOverlay.addEventListener('click', function (event) {
+        if (event.target === guideOverlay) {
+          closeGuide();
+        }
+      });
+
+      function demoClassify(text, trustedKeywords) {
+        const t = normalize(text);
+        const riskyWords = ['lottery', 'winner', 'urgent', 'claim', 'verify', 'crypto', 'free money', 'account suspended'];
+        const risky = riskyWords.some(function (w) { return t.includes(w); });
+        const trusted = trustedKeywords.some(function (w) { return t.includes(w); });
+        if (trusted) {
+          return 'not-spam';
+        }
+        return risky ? 'spam' : 'not-spam';
+      }
+
+      runDemoBtn.addEventListener('click', function () {
+        const gmail = (gmailInput.value || '').trim().toLowerCase();
+        if (!gmail || !gmail.includes('@')) {
+          demoResult.textContent = 'Please enter a valid Gmail first to run the demo.';
+          return;
+        }
+        if (!keywords.length) {
+          demoResult.textContent = 'Please add at least one keyword before running the demo.';
+          return;
+        }
+
+        const demoInbox = [
+          'Internship update for Isha with onboarding details',
+          'Urgent: verify your account now to avoid suspension',
+          'Project Alpha team meeting moved to Monday',
+          'Winner! Claim your free money today',
+          'Invoice for March services',
+          'Crypto investment secret for instant return'
+        ];
+
+        let spamCount = 0;
+        let safeCount = 0;
+        demoInbox.forEach(function (msg) {
+          const result = demoClassify(msg, keywords);
+          if (result === 'spam') {
+            spamCount += 1;
+          } else {
+            safeCount += 1;
+          }
+        });
+
+        writeGmail(gmail);
+        gmailStatus.textContent = 'Saved Gmail: ' + gmail;
+        heroGmailLine.textContent = 'Connected Gmail: ' + gmail;
+        demoResult.innerHTML =
+          '<strong>Demo complete for:</strong> ' + gmail + '<br>' +
+          '<strong>Emails processed:</strong> ' + demoInbox.length + '<br>' +
+          '<strong>Not Spam:</strong> ' + safeCount + '<br>' +
+          '<strong>Spam:</strong> ' + spamCount;
+      });
+
+      manualClearBtn.addEventListener('click', function () {
+        manualEmailInput.value = '';
+        manualStatus.textContent = 'Cleared.';
+        manualResult.innerHTML = '<div class="result-badge safe">No analysis yet</div><p>Paste an email and click Analyze Email to see Spam / Not Spam, confidence, and matched keywords.</p>';
+      });
+
+      manualAnalyzeBtn.addEventListener('click', async function () {
+        const text = (manualEmailInput.value || '').trim();
+        if (!text) {
+          manualStatus.textContent = 'Paste an email first.';
+          return;
+        }
+
+        manualStatus.textContent = 'Analyzing...';
+        manualResult.innerHTML = '<div class="result-badge safe">Analyzing</div><p>Please wait while the model checks your email.</p>';
+
+        try {
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              text: text,
+              keywords: keywords
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+          }
+
+          const result = await response.json();
+          const isSpam = Number(result.spam) === 1;
+          const label = result.label || (isSpam ? 'Spam' : 'Not Spam');
+          const confidence = typeof result.confidence === 'number' ? Math.round(result.confidence * 100) + '%' : 'N/A';
+          const matches = Array.isArray(result.keyword_matches) ? result.keyword_matches : [];
+
+          manualResult.innerHTML =
+            '<div class="result-badge ' + (isSpam ? 'spam' : 'safe') + '">' + label + '</div>' +
+            '<p><strong>Confidence:</strong> ' + confidence + '</p>' +
+            '<p><strong>Recommendation:</strong> ' + (isSpam ? 'This looks risky. Avoid links or attachments.' : 'This email appears safe.') + '</p>' +
+            '<p><strong>Matched Keywords:</strong> ' + (matches.length ? matches.join(', ') : 'None') + '</p>';
+
+          manualStatus.textContent = 'Analysis complete.';
+        } catch (err) {
+          const offlineSpamWords = ['urgent', 'winner', 'lottery', 'claim', 'verify', 'crypto', 'free money', 'suspended'];
+          const t = normalize(text);
+          const hasTrusted = keywords.some(function (k) { return t.includes(k); });
+          const hasRisk = offlineSpamWords.some(function (w) { return t.includes(w); });
+          const isSpam = !hasTrusted && hasRisk;
+          const label = isSpam ? 'Spam (offline check)' : 'Not Spam (offline check)';
+          const confidence = isSpam ? '73%' : '81%';
+          const matchedKeywords = keywords.filter(function (k) { return t.includes(k); });
+
+          manualStatus.textContent = 'API unavailable. Showing offline demo analysis.';
+          manualResult.innerHTML =
+            '<div class="result-badge ' + (isSpam ? 'spam' : 'safe') + '">' + label + '</div>' +
+            '<p><strong>Confidence:</strong> ' + confidence + '</p>' +
+            '<p><strong>Recommendation:</strong> ' + (isSpam ? 'Looks risky based on common spam wording.' : 'Looks safe based on keyword and wording check.') + '</p>' +
+            '<p><strong>Matched Keywords:</strong> ' + (matchedKeywords.length ? matchedKeywords.join(', ') : 'None') + '</p>';
+        }
       });
 
       renderKeywords();
+      renderAddonAnalysisFromQuery();
 
       document.querySelectorAll('.faq-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {

@@ -43,7 +43,24 @@ function setApiBaseUrl() {
 
 Replace with your real API URL and run `setApiBaseUrl`.
 
-## 4) Test in Gmail
+## 4) Configure the detailed analysis website
+
+The **Go for Detailed Analysis** button opens your deployed website, not the local file in this workspace. If you update [index.html](../index.html), redeploy the website so the add-on can open the updated version.
+
+In Apps Script editor, run this snippet once from the editor:
+
+```javascript
+function setMainWebsiteUrl() {
+  PropertiesService.getScriptProperties().setProperty(
+    'SPAM_MAIN_WEBSITE_URL',
+    'https://ishalanjekar.github.io/api-project-2/index.html'
+  );
+}
+```
+
+If your published site URL is different, replace it with that URL.
+
+## 5) Test in Gmail
 
 1. Click **Deploy > Test deployments**.
 2. Choose **Editor add-on** and install.

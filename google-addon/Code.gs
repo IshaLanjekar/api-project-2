@@ -1,6 +1,7 @@
 const API_BASE_URL_PROPERTY = 'SPAM_API_BASE_URL';
 const USER_KEYWORDS_PROPERTY = 'SPAM_USER_KEYWORDS';
 const MAIN_WEBSITE_URL_PROPERTY = 'SPAM_MAIN_WEBSITE_URL';
+const LAST_ANALYSIS_RESULT_PROPERTY = 'SPAM_LAST_ANALYSIS_RESULT';
 const MAX_TEXT_LENGTH = 4000;
 
 function setApiBaseUrl() {
@@ -13,7 +14,7 @@ function setApiBaseUrl() {
 function setMainWebsiteUrl() {
   PropertiesService.getScriptProperties().setProperty(
     MAIN_WEBSITE_URL_PROPERTY,
-    'https://ishalanjekar.github.io/api-project-2/'
+    'https://ishalanjekar.github.io/api-project-2/index.html#analysis'
   );
 }
 
@@ -79,6 +80,10 @@ function analyzeCurrentEmail(e) {
 
   try {
     const result = _callSpamApi(payload);
+    PropertiesService.getUserProperties().setProperty(
+      LAST_ANALYSIS_RESULT_PROPERTY,
+      JSON.stringify(result)
+    );
     const spamValue = Number(result.spam) === 1;
     const label = result.label || (spamValue ? 'Spam' : 'Not Spam');
 
@@ -128,6 +133,23 @@ function analyzeCurrentEmail(e) {
     return _notify(
       'API call timed out or failed. Retry in 10-20 seconds (Render cold start) or open a shorter email.'
     );
+  }
+}
+
+function showDetailedAnalysis() {
+  const raw = PropertiesService.getUserProperties().getProperty(LAST_ANALYSIS_RESULT_PROPERTY);
+  if (!raw) {
+    return _notify('Run Analyze Current Email first to generate detailed analysis.');
+  }
+
+  try {
+    const result = JSON.parse(raw);
+    const card = _buildDetailedAnalysisCard(result);
+    return CardService.newActionResponseBuilder()
+      .setNavigation(CardService.newNavigation().pushCard(card))
+      .build();
+  } catch (err) {
+    return _notify('Could not load detailed analysis. Please analyze the email again.');
   }
 }
 
@@ -342,7 +364,7 @@ function _getFormInputValue(e, fieldName) {
 function _buildDetailedAnalysisUrl(result) {
   const baseUrl =
     PropertiesService.getScriptProperties().getProperty(MAIN_WEBSITE_URL_PROPERTY) ||
-    'https://ishalanjekar.github.io/api-project-2/';
+    'https://ishalanjekar.github.io/api-project-2/index.html#analysis';
 
   const params = [];
 
@@ -366,6 +388,47 @@ function _buildDetailedAnalysisUrl(result) {
   }
 
   return baseWithoutHash + separator + params.join('&') + hashPart;
+}
+
+function _buildDetailedAnalysisCard(result) {
+  const spamValue = Number(result && result.spam) === 1;
+  const label = (result && result.label) || (spamValue ? 'Spam' : 'Not Spam');
+  const confidenceValue =
+    result && typeof result.confidence === 'number'
+      ? Math.round(result.confidence * 100) + '%'
+      : 'N/A';
+  const matchedKeywords = result && result.keyword_matches && result.keyword_matches.length
+    ? result.keyword_matches.join(', ')
+    : 'None';
+
+  const section = CardService.newCardSection()
+    .addWidget(
+      CardService.newTextParagraph().setText(
+        '<b>Classification:</b> ' + label + '<br/>' +
+        '<b>Confidence:</b> ' + confidenceValue + '<br/>' +
+        '<b>Matched Keywords:</b> ' + matchedKeywords
+      )
+    )
+    .addWidget(
+      CardService.newTextParagraph().setText(
+        spamValue
+          ? 'Detailed view: this email looks risky. Avoid links or attachments and review the sender carefully.'
+          : 'Detailed view: this email looks safe based on the model output and your trusted keywords.'
+      )
+    )
+    .addWidget(
+      CardService.newTextParagraph().setText(
+        '<b>What to do next:</b><br/>' +
+        (spamValue
+          ? 'Mark as spam if the sender is unknown, then ignore future similar emails.'
+          : 'Keep it in inbox and continue using your trusted keywords list.')
+      )
+    );
+
+  return CardService.newCardBuilder()
+    .setHeader(CardService.newCardHeader().setTitle('Detailed Analysis'))
+    .addSection(section)
+    .build();
 }
 
 function _notify(text) {
